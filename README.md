@@ -2,7 +2,29 @@
 
 This is a basic Face Detection application using Intel(R) Distribution of OpenVINO(TM) Toolkit and Age-Gender Model from https://github.com/deepinsight/insightface.
 
-I aim to show how OpenVINO(TM) Toolkit pre-trained model and a custom model can be used together with OpenVINO(TM) Toolkit Inference Engine Python API. 
+I aim to show how OpenVINO(TM) Toolkit pre-trained model and a custom model can be used together with OpenVINO(TM) Toolkit Inference Engine Python API.
+
+ ``OpenVINO(TM) Version: 2019.2.242``
+ 
+### Environment Setup (Ubuntu 18.04)
+
+Before running this Python application:
+
+1. Set Environment Variables on the current workspace:
+
+```bash
+source /opt/intel/openvino/bin/setupvars.sh
+```
+
+2. Set Environment Variables System Wide
+
+Copy intel-openvino.sh & intel-openvino.conf file as shown below:
+
+```bash
+sudo cp intel-openvino.sh /etc/profile.d/
+sudo cp intel-openvino.conf /etc/ld.so.conf.d/ 
+sudo reboot
+```
 
 # Convert Models to OpenVINO(TM) IR Files
 

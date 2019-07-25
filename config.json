@@ -1,15 +1,27 @@
 {
   "face_detection_model_path" : "/home/intel/openvino_models/Transportation/object_detection/face/pruned_mobilenet_reduced_ssd_shared_weights/dldt/",
   "face_detection_model_name" : "face-detection-adas-0001",
-  "age_gender_model_path" : "/home/intel/DeepLearning/Models/gamodel-r50/FP32/",
-  "age_gender_model_name" : "model-0000",
   "face_detection_threshold" : 0.99,
-  "window_name" : "Face Detection",
-  "input_type" : "file",
-  "input_path" : "/home/intel/Videos/facedetection.mp4",
   "face_detection_inference_device" : "CPU",
+  "face_detection_async" : "True",
+  "face_detection_cpu_extension" : "True",
+  "face_detection_cpu_extension_path" : "/home/intel/inference_engine_samples_build/intel64/Release/lib/libcpu_extension.so",
+  "face_detection_dynamic_batch" : "False",
+  "face_detection_batch_size" : 1,
+
+  "run_age_gender" : "True",
+  "age_gender_model_path" : "/home/intel/DeepLearning/Models/gamodel-r50/FP16/",
+  "age_gender_model_name" : "model-0000",
   "age_gender_inference_device" : "CPU",
-  "run_ga" : "True",
-  "async_ga" : "True",
-  "dynamic_batch_ga" : "True"
+  "age_gender_cpu_extension" : "True",
+  "age_gender_cpu_extension_path" : "/home/intel/inference_engine_samples_build/intel64/Release/lib/libcpu_extension.so",
+  "age_gender_async" : "True",
+  "age_gender_dynamic_batch" : "False",
+  "age_gender_batch_size" : 1,
+
+  "show_output" : "True",
+  "output_window_name" : "Face Detection",
+
+  "input_type" : "file",
+  "input_path" : "/home/intel/Videos/facedetection.mp4"
 }
