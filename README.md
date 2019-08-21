@@ -55,9 +55,10 @@ python3 face_detection_openvino.py config/config.json
 
 ## detection/
 
-`detection` folder contains the modules and classes to reuse for inference application development. 
+`detection` folder contains the modules and classes to reuse for inference application development.
 
 ## docker/
+
 
 ## files/
 
