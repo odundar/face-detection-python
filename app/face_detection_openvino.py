@@ -192,7 +192,7 @@ web_cam_index = 0
 face_detection_model = FaceDetectionModelTypes.OPENMODELZOO
 age_gender_model = AgeGenderDetectionTypes.OPENMODELZOO
 
-config_file = "/home/intel/Projects/face_detection/config/config.json"
+config_file = "~/Projects/face_detection/config/config.json"
 
 
 def parse_config_file(config_json='config.json'):

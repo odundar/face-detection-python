@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 MAINTAINER ONUR DUNDAR "onur.dundar1@gmail.com"
 
-# ARG DOWNLOAD_LINK=/home/intel/Projects/workshop_installation/openvino_installer/l_openvino_toolkit_p_2019.2.242.tgz
+# ARG DOWNLOAD_LINK=~/Projects/workshop_installation/openvino_installer/l_openvino_toolkit_p_2019.2.242.tgz
 ARG INSTALL_DIR=/opt/intel/openvino
 ARG TEMP_DIR=/tmp/openvino_installer
 

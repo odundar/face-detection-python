@@ -23,7 +23,7 @@ JSON Configuration have to made beforeh and in order to correctly start the infe
 ```bash
 curl --header "Content-Type: application/json" --request POST --data '@inference_config.json' http://127.0.0.1:8000/
 
-curl --header "Content-Type: application/json" --request POST --data '@/home/intel/Projects/face_detection/inference_services/facedetection/inference_config.json' http://127.0.0.1:8000
+curl --header "Content-Type: application/json" --request POST --data '@~/Projects/face_detection/inference_services/facedetection/inference_config.json' http://127.0.0.1:8000
 ```
 
 # Retrieve Status
