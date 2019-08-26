@@ -1,6 +1,8 @@
 # Python AI Project with Intel(R) OpenVINO(TM) Inference Engine Python API
 
-Here is a template project to reuse for production ready applications to use Deep Learning models.
+Here is a template project to reuse for production ready applications to use Deep Learning models focusing on Face, Age, Gender detection models.
+
+At this stage, only OpenVINO has been integrated. 
 
 # OpenVINO(TM) Toolkit Installation and Configuration for Ubuntu 18.04
 

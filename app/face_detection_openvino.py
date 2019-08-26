@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2019 Onur Dundar
+# Copyright (c) 2019 Onur Dundar onur.dundar1@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,9 @@ import cv2 as cv
 import json
 import logging
 
-from face_detection_ov import FaceDetectionConfig, OpenMZooFaceDetection, FaceDetectionModelTypes, MtCNNFaceDetection, MTCNNFaceDetectionConfig
-from age_gender_detection_ov import AgeGenderConfig, MTCNNAgeGenderDetection, AgeGenderDetectionTypes, MTCNNAgeGenderConfig, AgeGenderDetection
-from image_utils import ImageUtil
+from detection.face_detection_ov import FaceDetectionConfig, OpenMZooFaceDetection, FaceDetectionModelTypes, MtCNNFaceDetection, MTCNNFaceDetectionConfig
+from detection.age_gender_detection_ov import AgeGenderConfig, MTCNNAgeGenderDetection, AgeGenderDetectionTypes, MTCNNAgeGenderConfig, AgeGenderDetection
+from utils.image_utils import ImageUtil
 
 
 def prepare_configs():

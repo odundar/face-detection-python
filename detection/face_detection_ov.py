@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2019 Onur Dundar
+# Copyright (c) 2019 Onur Dundar onur.dundar1@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import numpy as np
 from PIL import Image
 
 from openvino.inference_engine import IENetwork, IECore, ExecutableNetwork
-from detection_base_ov import InferenceConfig, InferenceBase
+from .detection_base_ov import InferenceConfig, InferenceBase
 
 
 class FaceDetectionModelTypes:

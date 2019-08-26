@@ -1,9 +1,14 @@
 # Run Application
 
-Please see the Python code file `face_detection_openvino.py`, which shows how to load converted models, and start using them.
+This is a test application to run face-age-gender detections configured with the json file stored in config folder.
 
-Running and consuming deep learning models is easy, only thing you should do that the post-processing output vectors as they supposed to be. 
+Before running this application make sure OpenVINO environment has been setup correctly and `detection`, `utils` modules are in same directory as `app` folder.
 
-Therefore, when you know the conversion of those layers to meaningful values then you are ready to go. 
+```bash
+python3 app/face_detection_openvino.py config/config.json
+```
 
-Please see the source code for detailed explanation of usage.
+If you run inside the `app` folder make sure `detection` and `utils` modules are included in `PYTHONPATH`
+
+
+

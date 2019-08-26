@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2019 Onur Dundar
+# Copyright (c) 2019 Onur Dundar onur.dundar1@gmail.com
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ import json
 import numpy as np
 import logging
 
-from detection_base_ov import InferenceBase, InferenceConfig
+from .detection_base_ov import InferenceBase, InferenceConfig
 
 
 class AgeGenderDetectionTypes:
