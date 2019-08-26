@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<mapping>
+	<map>
+		<framework name="conv5" out_port_id="0"/>
+		<IR id="12" name="conv5" out_port_id="3"/>
+	</map>
+	<map>
+		<framework name="prelu5" out_port_id="0"/>
+		<IR id="13" name="prelu5" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="prelu2" out_port_id="0"/>
+		<IR id="5" name="prelu2" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="pool3" out_port_id="0"/>
+		<IR id="9" name="pool3" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="data" out_port_id="0"/>
+		<IR id="0" name="data" out_port_id="0"/>
+	</map>
+	<map>
+		<framework name="prelu4" out_port_id="0"/>
+		<IR id="11" name="prelu4" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="conv6_3" out_port_id="0"/>
+		<IR id="15" name="conv6_3" out_port_id="3"/>
+	</map>
+	<map>
+		<framework name="prelu3" out_port_id="0"/>
+		<IR id="8" name="prelu3" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="conv3" out_port_id="0"/>
+		<IR id="7" name="conv3" out_port_id="3"/>
+	</map>
+	<map>
+		<framework name="pool1" out_port_id="0"/>
+		<IR id="3" name="pool1" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="conv4" out_port_id="0"/>
+		<IR id="10" name="conv4" out_port_id="3"/>
+	</map>
+	<map>
+		<framework name="prob1" out_port_id="0"/>
+		<IR id="17" name="prob1" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="pool2" out_port_id="0"/>
+		<IR id="6" name="pool2" out_port_id="1"/>
+	</map>
+	<map>
+		<framework name="conv2" out_port_id="0"/>
+		<IR id="4" name="conv2" out_port_id="3"/>
+	</map>
+	<map>
+		<framework name="conv6_1" out_port_id="0"/>
+		<IR id="16" name="conv6_1" out_port_id="3"/>
+	</map>
+	<map>
+		<framework name="prelu1" out_port_id="0"/>
+		<IR id="2" name="prelu1" out_port_id="2"/>
+	</map>
+	<map>
+		<framework name="conv6_2" out_port_id="0"/>
+		<IR id="14" name="conv6_2" out_port_id="3"/>
+	</map>
+	<map>
+		<framework name="conv1" out_port_id="0"/>
+		<IR id="1" name="conv1" out_port_id="3"/>
+	</map>
+</mapping>

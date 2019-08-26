@@ -95,6 +95,47 @@ class FaceDetectionConfig(InferenceConfig):
             logging.log(logging.ERROR, '{} FileNotFound'.format(json_file))
             exit(-1)
 
+    def read_dict(self, data=None):
+        """
+        Used When JSON Already Parsed as Dict
+        :return:
+        """
+        if data is None:
+            logging.log(logging.ERROR, "No Parameters Passed")
+            exit(-1)
+
+        self.ModelPath = data[self.ModelType]["model_path"]
+        self.ModelName = data[self.ModelType]["model_name"]
+
+        self.TargetDevice = data[self.ModelType]["target_device"]
+
+        self.FaceDetectionThreshold = data[self.ModelType]["face_detection_threshold"]
+
+        if data[self.ModelType]["async"] == "True":
+            self.Async = True
+
+        self.RequestCount = int(data[self.ModelType]["request_count"])
+
+        self.BatchSize = int(data[self.ModelType]["batch_size"])
+
+        if data[self.ModelType]["cpu_extension"] == "True":
+            self.CpuExtension = True
+
+        self.CpuExtensionPath = data[self.ModelType]["cpu_extension_path"]
+
+        if data[self.ModelType]["dynamic_batch"] == "True":
+            self.DynamicBatch = True
+
+        if data[self.ModelType]["limit_cpu_threads"] == "True":
+            self.LimitCPUThreads = True
+
+        self.CPUThreadNum = int(data[self.ModelType]["number_of_cpu_threads"])
+
+        if data[self.ModelType]["bind_cpu_threads"] == "True":
+            self.LimitCPUThreads = True
+
+        self.CPUStream = data[self.ModelType]["cpu_stream"]
+
 
 class OpenMZooFaceDetection(InferenceBase):
     """
@@ -199,6 +240,49 @@ class MTCNNFaceDetectionConfig(InferenceConfig):
         except FileNotFoundError:
             logging.log(logging.ERROR, '{} FileNotFound'.format(json_file))
             exit(-1)
+
+    def read_dict(self, data=None):
+        """
+        Used When JSON Already Parsed as Dict
+        :return:
+        """
+        if data is None:
+            logging.getLogger(name="face_detection").log(logging.ERROR, "No Parameters Passed")
+            exit(-1)
+
+        self.ModelPath = data[self.ModelType]["model_path"]
+        self.PModelFileName = data[self.ModelType]["p_model_file_name"]
+        self.RModelFileName = data[self.ModelType]["r_model_file_name"]
+        self.OModelFileName = data[self.ModelType]["o_model_file_name"]
+
+        self.TargetDevice = data[self.ModelType]["target_device"]
+
+        if data[self.ModelType]["cpu_extension"] == "True":
+            self.CpuExtension = True
+
+        self.CpuExtensionPath = data[self.ModelType]["cpu_extension_path"]
+
+        self.PNetworkThreshold = float(data[self.ModelType]["p_network_threshold"])
+        self.RNetworkThreshold = float(data[self.ModelType]["r_network_threshold"])
+        self.ONetworkThreshold = float(data[self.ModelType]["o_network_threshold"])
+
+        self.MinimumFaceSize = float(data[self.ModelType]["minimum_face_size"])
+        self.MinLength = float(data[self.ModelType]["minimum_length"])
+        self.FactorCount = float(data[self.ModelType]["factor_count"])
+        self.Factor = float(data[self.ModelType]["factor"])
+        self.MinDetectionSize = int(data[self.ModelType]["min_detection_size"])
+
+        self.NMSThresholds = list(data[self.ModelType]["nms_thresholds"])
+
+        self.RInputBatchSize = int(data[self.ModelType]["r_input_batch_size"])
+        self.OInputBatchSize = int(data[self.ModelType]["o_input_batch_size"])
+
+        if data[self.ModelType]["limit_cpu_threads"] == "True":
+            self.LimitCPUThreads = True
+        self.CPUThreadNum = int(data[self.ModelType]["number_of_cpu_threads"])
+        if data[self.ModelType]["bind_cpu_threads"] == "True":
+            self.LimitCPUThreads = True
+        self.CPUStream = data[self.ModelType]["cpu_stream"]
 
 
 class MtCNNFaceDetection(InferenceBase):

@@ -47,7 +47,11 @@ python3 face_detection_openvino.py config/config.json
 
 ## app/
 
-`app` folder includes apps & services, ready to run for face, age, gender detection applications.
+`app` folder includes apps ready to run for face, age, gender detection applications.
+
+## services/
+
+service modules stored here which are to be deployed in docker microservices
 
 ## config/
 
@@ -57,10 +61,36 @@ python3 face_detection_openvino.py config/config.json
 
 `detection` folder contains the modules and classes to reuse for inference application development.
 
+```
+detection\
+    detection_base_ov.py\
+        InferenceConfig
+        InferenceBase
+    
+    age_gender_detection_ov.py\
+        AgeGenderDetectionTypes
+        AgeGenderDetection
+        AgeGenderConfig
+        MTCNNAgeGenderDetection
+        MTCNNAgeGenderConfig
+    
+    face_detection_ov.py\
+        FaceDetectionModelTypes
+        FaceDetectionConfig
+        OpenMZooFaceDetection
+        MTCNNFaceDetectionConfig
+        MtCNNFaceDetection
+```
+
 ## docker/
 
+Includes instructions to deploy face, age-gender detection services as docker services.
 
 ## files/
 
+This folder includes system configuration files for OpenVINO(TM) Toolkit
+
 ## models/
+
+Folder includes instructions how to fetch models, convert and use them. 
  

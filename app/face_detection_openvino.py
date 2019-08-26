@@ -26,8 +26,7 @@ import json
 import logging
 
 from face_detection_ov import FaceDetectionConfig, OpenMZooFaceDetection, FaceDetectionModelTypes, MtCNNFaceDetection, MTCNNFaceDetectionConfig
-
-from age_gender_detection_ov import AgeGenderConfig, MTCNNAgeGenderDetection
+from age_gender_detection_ov import AgeGenderConfig, MTCNNAgeGenderDetection, AgeGenderDetectionTypes, MTCNNAgeGenderConfig, AgeGenderDetection
 from image_utils import ImageUtil
 
 
@@ -47,7 +46,10 @@ def prepare_configs():
     age_gender_cfg = None
 
     if run_age_gender:
-        age_gender_cfg = AgeGenderConfig()
+        if age_gender_model == AgeGenderDetectionTypes.MTCNN:
+            age_gender_cfg = MTCNNAgeGenderConfig()
+        else:
+            age_gender_cfg = AgeGenderConfig()
         age_gender_cfg.parse_json(config_file)
 
     return face_infer_cfg, age_gender_cfg
@@ -82,7 +84,10 @@ def run_app():
         face_infer = OpenMZooFaceDetection(face_cfg)
 
     if run_age_gender:
-        age_gender_infer = MTCNNAgeGenderDetection(age_cfg)
+        if age_gender_model == AgeGenderDetectionTypes.MTCNN:
+            age_gender_infer = MTCNNAgeGenderDetection(age_cfg)
+        else:
+            age_gender_infer = AgeGenderDetection(age_cfg)
 
     face_request_order = list()
     face_process_order = list()
@@ -94,7 +99,6 @@ def run_app():
     cv.resizeWindow(cv_window_name, 800, 600)
 
     frame_order = []
-
     frame_id = 1
 
     if input_type == "video" or input_type == "webcam":
@@ -157,12 +161,13 @@ def run_app():
 
                 if run_age_gender:
                     cropped_image = ImageUtil.crop_frame(frame, (face[0], face[1], face[2], face[3]))
-                    age_gender_infer.infer(cropped_image)
-                    age, gender = age_gender_infer.get_age_gender_data()
-                    age_gender_text = '{} - {}'
-                    age_gender_text = age_gender_text.format(age, gender)
-                    ImageUtil.draw_text(frame, age_gender_text,
-                                        (face[0], face[1], face[2], face[3]))
+                    if cropped_image.size > 0:
+                        age_gender_infer.infer(cropped_image)
+                        age, gender = age_gender_infer.get_age_gender_data()
+                        age_gender_text = '{} - {}'
+                        age_gender_text = age_gender_text.format(age, gender)
+                        ImageUtil.draw_text(frame, age_gender_text,
+                                            (face[0], face[1], face[2], face[3]))
 
         cv.imshow(cv_window_name, frame)
         cv.waitKey(0)
@@ -183,7 +188,9 @@ run_age_gender = False
 input_type = "image"
 input_path = ''
 web_cam_index = 0
+
 face_detection_model = FaceDetectionModelTypes.OPENMODELZOO
+age_gender_model = AgeGenderDetectionTypes.OPENMODELZOO
 
 config_file = "/home/intel/Projects/face_detection/config/config.json"
 
@@ -220,6 +227,10 @@ def parse_config_file(config_json='config.json'):
             global face_detection_model
             if data['face_detection_model'] == FaceDetectionModelTypes.MTCNN:
                 face_detection_model = FaceDetectionModelTypes.MTCNN
+
+            global age_gender_model
+            if data['age_gender_detection_model'] == AgeGenderDetectionTypes.MTCNN:
+                age_gender_model = AgeGenderDetectionTypes.MTCNN
 
             if data["log_level"] == "DEBUG":
                 logging.basicConfig(level=logging.DEBUG)

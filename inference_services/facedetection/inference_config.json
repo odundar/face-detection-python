@@ -1,0 +1,59 @@
+{
+  "omz_facedetection" : {
+    "model_path" : "/app/models/",
+    "model_name" : "face-detection-retail-0013",
+    "target_device" : "CPU",
+    "cpu_extension" : "True",
+    "cpu_extension_path" : "/opt/intel/openvino/inference_engine/lib/intel64/libcpu_extension.so",
+    "face_detection_threshold" : 0.6,
+    "async" : "False",
+    "request_count" : 1,
+    "dynamic_batch" : "False",
+    "batch_size" : 1,
+    "limit_cpu_threads" : "False",
+    "number_of_cpu_threads" : 4,
+    "bind_cpu_threads" : "True",
+    "cpu_stream" : "AUTO",
+    "gpu_stream" : "AUTO"
+  },
+
+  "mtcnn_facedetection" : {
+    "model_path" : "/app/models/",
+    "p_model_file_name" : "det1-0001",
+    "r_model_file_name" : "det2-0001",
+    "o_model_file_name" : "det3-0001",
+    "target_device" : "CPU",
+    "cpu_extension" : "True",
+    "cpu_extension_path" : "/opt/intel/openvino/inference_engine/lib/intel64/libcpu_extension_sse4.so",
+
+    "p_network_threshold" : 0.6,
+    "r_network_threshold" : 0.7,
+    "o_network_threshold" : 0.8,
+
+    "minimum_face_size" : 15.0,
+    "minimum_length" : 720,
+    "factor_count" : 0,
+    "factor" : 0.707,
+    "min_detection_size" : 12,
+
+    "nms_thresholds" : [0.6, 0.6, 0.6],
+    "r_input_batch_size" : 256,
+    "o_input_batch_size" : 256,
+
+    "limit_cpu_threads" : "False",
+    "number_of_cpu_threads" : 4,
+    "bind_cpu_threads" : "True",
+    "cpu_stream" : "AUTO",
+    "gpu_stream" : "AUTO"
+  },
+
+  "face_detection_model" : "mtcnn_facedetection",
+  "input_type" : "video",
+  "input_path" : "/app/videos/facedetection.mp4",
+  "web_cam_index" : "0",
+  "log_level" : "DEBUG",
+
+  "save_roi_video" : "False",
+  "save_only_frames" : "False",
+  "save_roi" : "True"
+}

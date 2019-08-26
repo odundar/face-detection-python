@@ -92,6 +92,42 @@ class InferenceConfig(object):
             logging.log(logging.ERROR,'{} FileNotFound'.format(json_file))
             exit(-1)
 
+    def read_dict(self, data=None):
+        """
+        Used When JSON Already Parsed as Dict
+        :return:
+        """
+        if data is None:
+            data = dict()
+        self.ModelPath = data[self.ModelType]["model_path"]
+        self.ModelName = data[self.ModelType]["model_name"]
+        self.TargetDevice = data[self.ModelType]["target_device"]
+
+        if data[self.ModelType]["async"] == "True":
+            self.Async = True
+
+        self.RequestCount = int(data[self.ModelType]["request_count"])
+        self.BatchSize = int(data[self.ModelType]["batch_size"])
+
+        if data[self.ModelType]["cpu_extension"] == "True":
+            self.CpuExtension = True
+
+        self.CpuExtensionPath = data["cpu_extension_path"]
+
+        if data[self.ModelType]["dynamic_batch"] == "True":
+            self.DynamicBatch = True
+
+        if data[self.ModelType]["limit_cpu_threads"] == "True":
+            self.LimitCPUThreads = True
+
+        self.CPUThreadNum = int(data[self.ModelType]["cpu_thread_num"])
+
+        if data[self.ModelType]["bind_cpu_threads"] == "True":
+            self.LimitCPUThreads = True
+
+        self.CPUStream = data[self.ModelType]["cpu_stream"]
+
+
 
 class InferenceBase(object):
     """
