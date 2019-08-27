@@ -43,7 +43,7 @@ class InferenceConfig(object):
     DynamicBatch = False
     BatchSize = 1
     CpuExtension = False
-    CpuExtensionPath = "/opt/intel/inference_engine/lib/intel64/libcpu_extension.so"
+    CpuExtensionPath = "/opt/intel/openvino/inference_engine/lib/intel64/libcpu_extension.so"
     LimitCPUThreads = False
     CPUThreadNum = 1
     BindCPUThreads = True
@@ -126,7 +126,6 @@ class InferenceConfig(object):
             self.LimitCPUThreads = True
 
         self.CPUStream = data[self.ModelType]["cpu_stream"]
-
 
 
 class InferenceBase(object):

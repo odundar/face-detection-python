@@ -578,7 +578,12 @@ class MtCNNFaceDetection(InferenceBase):
         :param request_id:
         :return:
         """
-        return self.LastFaceDetections
+
+        lastDetections = self.LastFaceDetections
+
+        self.LastFaceDetections = []
+
+        return lastDetections
 
     def get_face_landmarks_data(self, request_id=0):
         """
@@ -586,7 +591,12 @@ class MtCNNFaceDetection(InferenceBase):
         :param request_id:
         :return:
         """
-        return self.LastLandmarkDetections
+
+        lastDetections = self.LastLandmarkDetections
+
+        self.LastLandmarkDetections = []
+
+        return lastDetections
 
     @staticmethod
     def preprocess(img):

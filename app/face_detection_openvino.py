@@ -63,36 +63,110 @@ def run_app():
 
     '''Open Web Cam (change 0 to any video file if required)'''
 
-    if input_type == "video":
-        capture = cv.VideoCapture(input_path)
-        has_frame, frame = capture.read()
-    elif input_type == "webcam":
-        capture = cv.VideoCapture(web_cam_index)
-        has_frame, frame = capture.read()
+    if input_type == "video" or input_type == "webcam":
+        if input_type == "video":
+            capture = cv.VideoCapture(input_path)
+            has_frame, frame = capture.read()
+        elif input_type == "webcam":
+            capture = cv.VideoCapture(web_cam_index)
+            has_frame, frame = capture.read()
+
+        face_cfg.InputHeight = frame.shape[0]
+        face_cfg.InputWidth = frame.shape[1]
+
+        if face_detection_model == FaceDetectionModelTypes.MTCNN:
+            face_infer = MtCNNFaceDetection(face_cfg)
+        else:
+            face_infer = OpenMZooFaceDetection(face_cfg)
+
+        if run_age_gender:
+            if age_gender_model == AgeGenderDetectionTypes.MTCNN:
+                age_gender_infer = MTCNNAgeGenderDetection(age_cfg)
+            else:
+                age_gender_infer = AgeGenderDetection(age_cfg)
+
+        video_inference(face_inference=face_infer, age_inference=age_gender_infer, source=capture)
+
     elif input_type == "image":
         frame = cv.imread(input_path)
+
+        face_cfg.InputHeight = frame.shape[0]
+        face_cfg.InputWidth = frame.shape[1]
+
+        if face_detection_model == FaceDetectionModelTypes.MTCNN:
+            face_infer = MtCNNFaceDetection(face_cfg)
+        else:
+            face_infer = OpenMZooFaceDetection(face_cfg)
+
+        if run_age_gender:
+            if age_gender_model == AgeGenderDetectionTypes.MTCNN:
+                age_gender_infer = MTCNNAgeGenderDetection(age_cfg)
+            else:
+                age_gender_infer = AgeGenderDetection(age_cfg)
+
+        image_inference(face_inference=face_infer, age_inference=age_gender_infer, source=frame)
     else:
         logging.log(logging.ERROR, "Invalid Input Type: {}".format(input_type))
         exit(-1)
 
-    face_cfg.InputHeight = frame.shape[0]
-    face_cfg.InputWidth = frame.shape[1]
+    return None
 
-    if face_detection_model == FaceDetectionModelTypes.MTCNN:
-        face_infer = MtCNNFaceDetection(face_cfg)
-    else:
-        face_infer = OpenMZooFaceDetection(face_cfg)
 
-    if run_age_gender:
-        if age_gender_model == AgeGenderDetectionTypes.MTCNN:
-            age_gender_infer = MTCNNAgeGenderDetection(age_cfg)
-        else:
-            age_gender_infer = AgeGenderDetection(age_cfg)
+def image_inference(face_inference=None, age_inference=None, source=None):
+    """
 
+    :param face_inference:
+    :param age_inference:
+    :param source:
+    :return:
+    """
+    cv.namedWindow(cv_window_name, cv.WINDOW_NORMAL)
+    cv.resizeWindow(cv_window_name, 800, 600)
+
+    frame_order = []
+    frame_id = 1
+
+    face_inference.infer(source)
+    faces = face_inference.get_face_detection_data()
+    if face_inference.Config.ModelType == FaceDetectionModelTypes.MTCNN:
+        landmarks = face_inference.get_face_landmarks_data()
+
+    if len(faces) > 0:
+        print("Detected {} Faces with {} Threshold".format(len(faces), face_inference.Config.FaceDetectionThreshold))
+        for idx, face in enumerate(faces):
+            ImageUtil.draw_rectangle(source, (face[0], face[1], face[2], face[3]))
+            if face_inference.Config.ModelType == FaceDetectionModelTypes.MTCNN:
+                for coordinate in range(0, len(landmarks[idx]), 2):
+                    ImageUtil.draw_ellipse(source, [landmarks[idx][coordinate], landmarks[idx][coordinate + 1]])
+
+            if run_age_gender:
+                cropped_image = ImageUtil.crop_frame(source, (face[0], face[1], face[2], face[3]))
+                if cropped_image.size > 0:
+                    age_inference.infer(cropped_image)
+                    age, gender = age_inference.get_age_gender_data()
+                    age_gender_text = '{} - {}'
+                    age_gender_text = age_gender_text.format(age, gender)
+                    ImageUtil.draw_text(source, age_gender_text,
+                                        (face[0], face[1], face[2], face[3]))
+
+    cv.imshow(cv_window_name, source)
+    cv.waitKey(0)
+
+    return None
+
+
+def video_inference(face_inference=None, age_inference=None, source=None):
+    """
+
+    :param face_inference:
+    :param age_inference:
+    :param source:
+    :return:
+    """
     face_request_order = list()
     face_process_order = list()
 
-    for i in range(face_infer.Config.RequestCount):
+    for i in range(face_inference.Config.RequestCount):
         face_request_order.append(i)
 
     cv.namedWindow(cv_window_name, cv.WINDOW_NORMAL)
@@ -101,80 +175,56 @@ def run_app():
     frame_order = []
     frame_id = 1
 
-    if input_type == "video" or input_type == "webcam":
-        while has_frame:
-            logging.log(logging.DEBUG, "Processing Frame {}".format(frame_id))
-            if len(face_request_order) > 0:
-                req_id = face_request_order[0]
-                face_request_order.pop(0)
-                face_infer.infer(frame, req_id)
-                face_process_order.append(req_id)
-                frame_order.append(frame)
+    has_frame, frame = source.read()
 
-            if len(face_process_order) > 0:
-                first = face_process_order[0]
-                if face_infer.request_ready(request_id=first):
-                    detected_faces = face_infer.get_face_detection_data(first)
-                    if face_cfg.ModelType == FaceDetectionModelTypes.MTCNN:
-                        face_landmarks = face_infer.get_face_landmarks_data(first)
-                    face_process_order.pop(0)
-                    face_request_order.append(first)
-                    show_frame = frame_order[0]
-                    frame_order.pop(0)
-                    if len(detected_faces) > 0:
-                        for idx, face in enumerate(detected_faces):
-                            ImageUtil.draw_rectangle(show_frame, (face[0], face[1], face[2], face[3]))
+    while has_frame:
+        logging.log(logging.DEBUG, "Processing Frame {}".format(frame_id))
+        if len(face_request_order) > 0:
+            req_id = face_request_order[0]
+            face_request_order.pop(0)
+            face_inference.infer(frame, req_id)
+            face_process_order.append(req_id)
+            frame_order.append(frame)
 
-                            if face_cfg.ModelType == FaceDetectionModelTypes.MTCNN:
-                                for coordinate in range(0, len(face_landmarks[idx]), 2):
-                                    ImageUtil.draw_ellipse(show_frame, [face_landmarks[idx][coordinate], face_landmarks[idx][coordinate + 1]])
+        if len(face_process_order) > 0:
+            first = face_process_order[0]
+            if face_inference.request_ready(request_id=first):
+                detected_faces = face_inference.get_face_detection_data(first)
+                if face_inference.Config.ModelType == FaceDetectionModelTypes.MTCNN:
+                    face_landmarks = face_inference.get_face_landmarks_data(first)
+                face_process_order.pop(0)
+                face_request_order.append(first)
+                show_frame = frame_order[0]
+                frame_order.pop(0)
+                if len(detected_faces) > 0:
+                    for idx, face in enumerate(detected_faces):
+                        ImageUtil.draw_rectangle(show_frame, (face[0], face[1], face[2], face[3]))
 
-                            if run_age_gender:
-                                cropped_image = ImageUtil.crop_frame(show_frame, (face[0], face[1], face[2], face[3]))
-                                if cropped_image.size > 0:
-                                    age_gender_infer.infer(cropped_image)
-                                    age, gender = age_gender_infer.get_age_gender_data()
-                                    age_gender_text = '{} - {}'
-                                    age_gender_text = age_gender_text.format(age, gender)
-                                    ImageUtil.draw_text(show_frame, age_gender_text, (face[0], face[1], face[2], face[3]))
+                        if face_inference.Config.ModelType == FaceDetectionModelTypes.MTCNN:
+                            for coordinate in range(0, len(face_landmarks[idx]), 2):
+                                ImageUtil.draw_ellipse(show_frame, [face_landmarks[idx][coordinate],
+                                                                    face_landmarks[idx][coordinate + 1]])
 
-                    cv.imshow(cv_window_name, show_frame)
-                    if cv.waitKey(1) & 0xFF == ord('q'):
-                        break
+                        if run_age_gender:
+                            cropped_image = ImageUtil.crop_frame(show_frame, (face[0], face[1], face[2], face[3]))
+                            if cropped_image.size > 0:
+                                age_inference.infer(cropped_image)
+                                age, gender = age_inference.get_age_gender_data()
+                                age_gender_text = '{} - {}'
+                                age_gender_text = age_gender_text.format(age, gender)
+                                ImageUtil.draw_text(show_frame, age_gender_text, (face[0], face[1], face[2], face[3]))
 
-            if len(face_request_order) > 0:
-                has_frame, frame = capture.read()
-                frame_id += 1
-    else:
-        face_infer.infer(frame)
-        faces = face_infer.get_face_detection_data()
-        if face_cfg.ModelType == FaceDetectionModelTypes.MTCNN:
-            landmarks = face_infer.get_face_landmarks_data()
+                cv.imshow(cv_window_name, show_frame)
+                if cv.waitKey(1) & 0xFF == ord('q'):
+                    break
 
-        if len(faces) > 0:
-            print("Detected {} Faces with {} Threshold".format(len(faces), face_infer.Config.FaceDetectionThreshold))
-            for idx, face in enumerate(faces):
-                ImageUtil.draw_rectangle(frame, (face[0], face[1], face[2], face[3]))
-                if face_cfg.ModelType == FaceDetectionModelTypes.MTCNN:
-                    for coordinate in range(0, len(landmarks[idx]), 2):
-                        ImageUtil.draw_ellipse(frame, [landmarks[idx][coordinate], landmarks[idx][coordinate+1]])
+        if len(face_request_order) > 0:
+            has_frame, frame = source.read()
+            frame_id += 1
 
-                if run_age_gender:
-                    cropped_image = ImageUtil.crop_frame(frame, (face[0], face[1], face[2], face[3]))
-                    if cropped_image.size > 0:
-                        age_gender_infer.infer(cropped_image)
-                        age, gender = age_gender_infer.get_age_gender_data()
-                        age_gender_text = '{} - {}'
-                        age_gender_text = age_gender_text.format(age, gender)
-                        ImageUtil.draw_text(frame, age_gender_text,
-                                            (face[0], face[1], face[2], face[3]))
-
-        cv.imshow(cv_window_name, frame)
-        cv.waitKey(0)
-
-    face_infer.print_inference_performance_metrics()
+    face_inference.print_inference_performance_metrics()
     if run_age_gender:
-        age_gender_infer.print_inference_performance_metrics()
+        age_inference.print_inference_performance_metrics()
 
     return None
 
@@ -188,10 +238,8 @@ run_age_gender = False
 input_type = "image"
 input_path = ''
 web_cam_index = 0
-
 face_detection_model = FaceDetectionModelTypes.OPENMODELZOO
 age_gender_model = AgeGenderDetectionTypes.OPENMODELZOO
-
 config_file = "~/Projects/face_detection/config/config.json"
 
 
